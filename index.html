@@ -13,59 +13,12 @@
     <link rel="modulepreload" crossorigin href="/assets/react-vendor-DYU0Rr6N.js">
     <link rel="modulepreload" crossorigin href="/assets/radix-ui-BrXWnT8S.js">
     <link rel="stylesheet" crossorigin href="/assets/index-BngvQN0J.css">
-    
     <script>
-      // ── GLOBAL ASSET INTERCEPTOR ──
-      // Catches and forces missing logo or banner spots to map straight to your uploads
-      (function() {
-        const imageMap = {
-          'logo-horizontal': '/airo-assets/uploads/logo-horizontal-421a29e0.png',
-          'horizontal': '/airo-assets/uploads/logo-horizontal-421a29e0.png',
-          'hero': '/airo-assets/images/pages/home/hero',
-          'before-after-driveway': '/airo-assets/images/pages/home/before-after-driveway',
-          'service-commercial-cleaning': '/airo-assets/images/pages/home/service-commercial-cleaning',
-          'service-exterior-building': '/airo-assets/images/pages/home/service-exterior-building',
-          'service-drivethru-cleaning': '/airo-assets/images/pages/home/service-drivethru-cleaning',
-          'service-patio-cleaning': '/airo-assets/images/pages/home/service-patio-cleaning',
-          'before-after-house-washing': '/airo-assets/images/pages/home/before-after-house-washing'
-        };
-
-        const observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-              if (node.tagName === 'IMG') fixSrc(node);
-              else if (node.querySelectorAll) node.querySelectorAll('img').forEach(fixSrc);
-              if (node.tagName === 'SECTION' || (node.querySelectorAll && node.querySelectorAll('section').length)) fixHero(node);
-            });
-          });
-        });
-
-        // Fixes image tags like logos and service blocks
-        function fixSrc(img) {
-          const currentSrc = img.getAttribute('src') || '';
-          for (const [key, fallbackPath] of Object.entries(imageMap)) {
-            if (currentSrc.includes(key) && currentSrc !== fallbackPath) {
-              img.src = fallbackPath;
-              break;
-            }
-          }
-        }
-
-        // Forces your top hero background banner photo to map correctly
-        function fixHero(node) {
-          const target = node.tagName === 'SECTION' ? node : node.querySelector('section');
-          if (target && (target.outerHTML.includes('── HERO ──') || (target.className && target.className.includes('py-24')))) {
-            if (!target.style.backgroundImage) {
-              target.style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('/airo-assets/images/pages/home/hero')";
-              target.style.backgroundSize = "cover";
-              target.style.backgroundPosition = "center";
-              target.style.backgroundRepeat = "no-repeat";
-            }
-          }
-        }
-
-        observer.observe(document.documentElement, { childList: true, subtree: true });
-      })();
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').then(() => {
+          console.log('Asset Proxy Active');
+        }).catch(err => console.log('Proxy error:', err));
+      }
     </script>
   </head>
   <body class="fs-unmask-airo-app-builder">
