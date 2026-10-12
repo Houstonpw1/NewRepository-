@@ -13,12 +13,46 @@
     <link rel="modulepreload" crossorigin href="/assets/react-vendor-DYU0Rr6N.js">
     <link rel="modulepreload" crossorigin href="/assets/radix-ui-BrXWnT8S.js">
     <link rel="stylesheet" crossorigin href="/assets/index-BngvQN0J.css">
+    
     <script>
-      // Force GoDaddy's asset manager to look inside the media folder for the logo
-      window.addEventListener('DOMContentLoaded', () => {
-        const logoImg = document.querySelector('img[src*="logo-horizontal"]');
-        if (logoImg) logoImg.src = '/media/logo-horizontal-421a29e0.png';
-      });
+      // ── GODADDY AIRO ROUTING INTERCEPTOR ──
+      // This script forces broken virtual slot images to route straight to your clean media folder
+      (function() {
+        const imageMap = {
+          'horizontal': '/media/logo-horizontal-421a29e0.png',
+          'hero': '/media/hero.jpg',
+          'before-after-driveway': '/media/before-after-driveway.png',
+          'service-commercial-cleaning': '/media/service-commercial-cleaning.png',
+          'service-exterior-building': '/media/service-exterior-building.png',
+          'service-drivethru-cleaning': '/media/service-drivethru-cleaning.png',
+          'service-patio-cleaning': '/media/service-patio-cleaning.png',
+          'before-after-house-washing': '/media/before-after-house-washing.png'
+        };
+
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.tagName === 'IMG') {
+                fixSrc(node);
+              } else if (node.querySelectorAll) {
+                node.querySelectorAll('img').forEach(fixSrc);
+              }
+            });
+          });
+        });
+
+        function fixSrc(img) {
+          const currentSrc = img.getAttribute('src') || '';
+          for (const [key, fallbackPath] of Object.entries(imageMap)) {
+            if (currentSrc.includes(key) && !currentSrc.startsWith('/media/')) {
+              img.src = fallbackPath;
+              break;
+            }
+          }
+        }
+
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+      })();
     </script>
   </head>
   <body class="fs-unmask-airo-app-builder">
