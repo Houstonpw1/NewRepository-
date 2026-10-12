@@ -16,9 +16,10 @@
     
     <script>
       // ── GLOBAL ASSET INTERCEPTOR ──
-      // This script catches any missing logo or banner spots and injects the true files automatically
+      // Catches and forces missing logo or banner spots to map straight to your uploads
       (function() {
         const imageMap = {
+          'logo-horizontal': '/airo-assets/uploads/logo-horizontal-421a29e0.png',
           'horizontal': '/airo-assets/uploads/logo-horizontal-421a29e0.png',
           'hero': '/airo-assets/images/pages/home/hero',
           'before-after-driveway': '/airo-assets/images/pages/home/before-after-driveway',
@@ -31,7 +32,6 @@
 
         const observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
-            // Check for newly added logo or header elements
             mutation.addedNodes.forEach((node) => {
               if (node.tagName === 'IMG') fixSrc(node);
               else if (node.querySelectorAll) node.querySelectorAll('img').forEach(fixSrc);
@@ -40,7 +40,7 @@
           });
         });
 
-        // Fixes image tags like logos
+        // Fixes image tags like logos and service blocks
         function fixSrc(img) {
           const currentSrc = img.getAttribute('src') || '';
           for (const [key, fallbackPath] of Object.entries(imageMap)) {
@@ -51,14 +51,16 @@
           }
         }
 
-        // Forces your hero banner photo to overlay the solid background color
+        // Forces your top hero background banner photo to map correctly
         function fixHero(node) {
           const target = node.tagName === 'SECTION' ? node : node.querySelector('section');
-          if (target && target.outerHTML.includes('── HERO ──') || (target && target.className && target.className.includes('py-24'))) {
-            target.style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('/airo-assets/images/pages/home/hero')";
-            target.style.backgroundSize = "cover";
-            target.style.backgroundPosition = "center";
-            target.style.backgroundRepeat = "no-repeat";
+          if (target && (target.outerHTML.includes('── HERO ──') || (target.className && target.className.includes('py-24')))) {
+            if (!target.style.backgroundImage) {
+              target.style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('/airo-assets/images/pages/home/hero')";
+              target.style.backgroundSize = "cover";
+              target.style.backgroundPosition = "center";
+              target.style.backgroundRepeat = "no-repeat";
+            }
           }
         }
 
@@ -71,5 +73,3 @@
     <script src="/analytics.js"></script>
   </body>
 </html>
-
-
