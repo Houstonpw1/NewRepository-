@@ -4,16 +4,21 @@
     <meta charset="utf-8">
     <title>Houston Pressure Washing</title>
     <script type="text/javascript">
-      // Check if the 404 is happening on an extension-less image route
       var path = window.location.pathname;
-      if (path.includes('before-after') || path.includes('service-') || path.includes('hero') || path.includes('horizontal')) {
-        // Silently route the browser straight to your clean media folder asset
-        var filename = path.substring(path.lastIndexOf('/') + 1);
-        var extension = filename.includes('logo') || filename.includes('before-after') ? '.png' : '.jpg';
-        if (filename.includes('cleaning') || filename.includes('building')) extension = '.png';
-        window.location.replace('/media/' + filename + extension);
-      } else {
-        // Otherwise, preserve the Single Page App state
+      var filename = path.substring(path.lastIndexOf('/') + 1);
+
+      // ── LOGO ROUTING ──
+      if (path.includes('horizontal') || filename.includes('logo')) {
+        window.location.replace('/airo-assets/uploads/logo-horizontal-421a29e0.png');
+      } 
+      // ── HERO & SERVICE IMAGES ROUTING ──
+      else if (path.includes('before-after') || path.includes('service-') || path.includes('hero')) {
+        // Strip out any accidental extensions added by the browser to match your extensionless files
+        var cleanName = filename.replace(/\.(png|jpg|jpeg|PNG|JPG|JPEG)$/, '');
+        window.location.replace('/airo-assets/images/pages/home/' + cleanName);
+      } 
+      // ── FALLBACK FOR STANDARD SITE PAGES ──
+      else {
         window.location.replace('/');
       }
     </script>
