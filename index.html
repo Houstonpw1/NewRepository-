@@ -13,6 +13,49 @@
     <link rel="modulepreload" crossorigin href="/assets/react-vendor-DYU0Rr6N.js">
     <link rel="modulepreload" crossorigin href="/assets/radix-ui-BrXWnT8S.js">
     <link rel="stylesheet" crossorigin href="/assets/index-BngvQN0J.css">
+    
+    <script>
+      // ── GLOBAL ASSET INTERCEPTOR ──
+      (function() {
+        const imageMap = {
+          'logo-horizontal': '/airo-assets/uploads/logo-horizontal-421a29e0.png',
+          'horizontal': '/airo-assets/uploads/logo-horizontal-421a29e0.png',
+          'hero': '/airo-assets/images/pages/home/hero',
+          'before-after-driveway': '/airo-assets/images/pages/home/before-after-driveway',
+          'service-commercial-cleaning': '/airo-assets/images/pages/home/service-commercial-cleaning',
+          'service-exterior-building': '/airo-assets/images/pages/home/service-exterior-building',
+          'service-drivethru-cleaning': '/airo-assets/images/pages/home/service-drivethru-cleaning',
+          'service-patio-cleaning': '/airo-assets/images/pages/home/service-patio-cleaning',
+          'before-after-house-washing': '/airo-assets/images/pages/home/before-after-house-washing'
+        };
+
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.tagName === 'IMG') fixSrc(node);
+              else if (node.querySelectorAll) node.querySelectorAll('img').forEach(fixSrc);
+            });
+          });
+        });
+
+        function fixSrc(img) {
+          const currentSrc = img.getAttribute('src') || '';
+          for (const [key, fallbackPath] of Object.entries(imageMap)) {
+            if (currentSrc.includes(key) && currentSrc !== fallbackPath) {
+              img.src = fallbackPath;
+              // If it's the main center logo, force a clean white background styling hook
+              if (key === 'logo-horizontal' || key === 'horizontal') {
+                img.style.backgroundColor = '#ffffff';
+                img.style.padding = '8px';
+                img.style.borderRadius = '6px';
+              }
+              break;
+            }
+          }
+        }
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+      })();
+    </script>
   </head>
   <body class="fs-unmask-airo-app-builder">
     <div id="app" class="fs-unmask-airo-app-builder"><!--app-html--></div>
