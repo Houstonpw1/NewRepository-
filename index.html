@@ -15,39 +15,50 @@
     <link rel="stylesheet" crossorigin href="/assets/index-BngvQN0J.css">
     
     <script>
-      // ── GODADDY AIRO ROUTING INTERCEPTOR ──
-      // This script forces broken virtual slot images to route straight to your clean media folder
+      // ── GLOBAL ASSET INTERCEPTOR ──
+      // This script catches any missing logo or banner spots and injects the true files automatically
       (function() {
         const imageMap = {
-          'horizontal': '/media/logo-horizontal-421a29e0.png',
-          'hero': '/media/hero.jpg',
-          'before-after-driveway': '/media/before-after-driveway.png',
-          'service-commercial-cleaning': '/media/service-commercial-cleaning.png',
-          'service-exterior-building': '/media/service-exterior-building.png',
-          'service-drivethru-cleaning': '/media/service-drivethru-cleaning.png',
-          'service-patio-cleaning': '/media/service-patio-cleaning.png',
-          'before-after-house-washing': '/media/before-after-house-washing.png'
+          'horizontal': '/airo-assets/uploads/logo-horizontal-421a29e0.png',
+          'hero': '/airo-assets/images/pages/home/hero',
+          'before-after-driveway': '/airo-assets/images/pages/home/before-after-driveway',
+          'service-commercial-cleaning': '/airo-assets/images/pages/home/service-commercial-cleaning',
+          'service-exterior-building': '/airo-assets/images/pages/home/service-exterior-building',
+          'service-drivethru-cleaning': '/airo-assets/images/pages/home/service-drivethru-cleaning',
+          'service-patio-cleaning': '/airo-assets/images/pages/home/service-patio-cleaning',
+          'before-after-house-washing': '/airo-assets/images/pages/home/before-after-house-washing'
         };
 
         const observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
+            // Check for newly added logo or header elements
             mutation.addedNodes.forEach((node) => {
-              if (node.tagName === 'IMG') {
-                fixSrc(node);
-              } else if (node.querySelectorAll) {
-                node.querySelectorAll('img').forEach(fixSrc);
-              }
+              if (node.tagName === 'IMG') fixSrc(node);
+              else if (node.querySelectorAll) node.querySelectorAll('img').forEach(fixSrc);
+              if (node.tagName === 'SECTION' || (node.querySelectorAll && node.querySelectorAll('section').length)) fixHero(node);
             });
           });
         });
 
+        // Fixes image tags like logos
         function fixSrc(img) {
           const currentSrc = img.getAttribute('src') || '';
           for (const [key, fallbackPath] of Object.entries(imageMap)) {
-            if (currentSrc.includes(key) && !currentSrc.startsWith('/media/')) {
+            if (currentSrc.includes(key) && currentSrc !== fallbackPath) {
               img.src = fallbackPath;
               break;
             }
+          }
+        }
+
+        // Forces your hero banner photo to overlay the solid background color
+        function fixHero(node) {
+          const target = node.tagName === 'SECTION' ? node : node.querySelector('section');
+          if (target && target.outerHTML.includes('── HERO ──') || (target && target.className && target.className.includes('py-24'))) {
+            target.style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('/airo-assets/images/pages/home/hero')";
+            target.style.backgroundSize = "cover";
+            target.style.backgroundPosition = "center";
+            target.style.backgroundRepeat = "no-repeat";
           }
         }
 
