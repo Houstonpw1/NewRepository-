@@ -13,43 +13,6 @@
     <link rel="modulepreload" crossorigin href="/assets/react-vendor-DYU0Rr6N.js">
     <link rel="modulepreload" crossorigin href="/assets/radix-ui-BrXWnT8S.js">
     <link rel="stylesheet" crossorigin href="/assets/index-BngvQN0J.css">
-    
-    <script>
-      // ── CLOUD ASSET OVERRIDE INTERCEPTOR ──
-      (function() {
-        const imageMap = {
-          'logo-horizontal': '/media/logo-horizontal-421a29e0.png',
-          'horizontal': '/media/logo-horizontal-421a29e0.png',
-          'hero': '/media/hero.jpg',
-          'before-after-driveway': '/media/before-after-driveway.png',
-          'before-after-house-washing': '/media/before-after-house-washing.png',
-          'service-commercial-cleaning': '/media/service-commercial-cleaning.png',
-          'service-exterior-building': '/media/service-exterior-building.png',
-          'service-drivethru-cleaning': '/media/service-drivethru-cleaning.png',
-          'service-patio-cleaning': '/media/service-patio-cleaning.png'
-        };
-
-        const observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-              if (node.tagName === 'IMG') fixSrc(node);
-              else if (node.querySelectorAll) node.querySelectorAll('img').forEach(fixSrc);
-            });
-          });
-        });
-
-        function fixSrc(img) {
-          const currentSrc = img.getAttribute('src') || '';
-          for (const [key, fallbackPath] of Object.entries(imageMap)) {
-            if (currentSrc.includes(key) && currentSrc !== fallbackPath) {
-              img.src = fallbackPath;
-              break;
-            }
-          }
-        }
-        observer.observe(document.documentElement, { childList: true, subtree: true });
-      })();
-    </script>
   </head>
   <body class="fs-unmask-airo-app-builder">
     <div id="app" class="fs-unmask-airo-app-builder"><!--app-html--></div>
